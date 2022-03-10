@@ -5,8 +5,11 @@ class TodolistViewer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder(
+    return Container(
+      //height: 200,
+      //width: 200,
       color: Colors.yellow,
+      child: Text('Дела'),
     );
   }
 }

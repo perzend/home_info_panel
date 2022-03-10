@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_info_panel/camera_viewer.dart';
+import 'package:home_info_panel/currency_viewer.dart';
 import 'package:home_info_panel/map_viewer.dart';
 import 'package:home_info_panel/todolist_viewer.dart';
 import 'package:home_info_panel/weather_viewer.dart';
@@ -14,45 +15,66 @@ class Frame extends StatefulWidget {
 class _FrameState extends State<Frame> {
   var _selectedIndex = 0;
 
-  List<Widget> _widgetsOption = [
+  final _fullListWidgets = [
     CameraViewer(),
     WeatherViewer(),
+    // CurrencyViewer(),
     MapViewer(),
     TodolistViewer()
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Row(
-        children: [
-          Container(
-            // height: 480,
-            // width: 640,
-            color: Colors.red,
-            child: _widgetsOption.elementAt(_selectedIndex),
-          ),
-          Column(
-            children: [],
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.camera), label: 'Камера'),
-          BottomNavigationBarItem(icon: Icon(Icons.cloud), label: 'Погода'),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Карта'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Дела')
-        ],
-        currentIndex: _selectedIndex,
-        onTap: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.grey,
+    var _selectedWidget = _fullListWidgets.removeAt(_selectedIndex);
+    return SafeArea(
+      child: Scaffold(
+        appBar:
+            // PreferredSize(
+            //   preferredSize: Size.fromHeight(100),
+            //   child:
+            AppBar(
+          title: CurrencyViewer(),
+
+          centerTitle: true,
+          backgroundColor: Colors.black,
+          //titleTextStyle: TextStyle(color: Colors.white),
+        ),
+        // ),
+        body: Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                color: Colors.red,
+                child: _selectedWidget,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _fullListWidgets,
+              ),
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.camera), label: 'Камера'),
+            BottomNavigationBarItem(icon: Icon(Icons.cloud), label: 'Погода'),
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Карта'),
+            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Дела')
+          ],
+          currentIndex: _selectedIndex,
+          onTap: (int index) {
+            setState(() {
+              _fullListWidgets.insert(_selectedIndex, _selectedWidget);
+              _selectedIndex = index;
+            });
+          },
+          selectedItemColor: Colors.amber,
+          unselectedItemColor: Colors.grey,
+        ),
       ),
     );
   }
