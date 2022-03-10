@@ -33,6 +33,12 @@ class CurrencyViewer extends StatefulWidget {
 class _CurrencyViewerState extends State<CurrencyViewer> {
   late Future<List<Currency>> futureCurrency;
 
+  ScrollController _scrollController = ScrollController();
+
+  _scrollToBottom() {
+    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -44,12 +50,23 @@ class _CurrencyViewerState extends State<CurrencyViewer> {
     return FutureBuilder<List<Currency>>(
       future: futureCurrency,
       builder: (context, snapshot) {
+        WidgetsBinding.instance?.addPostFrameCallback((_) {
+          if (_scrollController.hasClients) {
+            _scrollController.animateTo(
+              _scrollController.position.maxScrollExtent,
+              curve: Curves.linear,
+              duration: const Duration(seconds: 120),
+            );
+          }
+        });
         if (snapshot.hasData) {
           return SizedBox(
             height: 50,
             child: ListView.separated(
+                controller: _scrollController,
                 shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
+                // physics: ScrollPhysics().,
                 separatorBuilder: (context, index) => const VerticalDivider(
                       thickness: 5,
                       color: Colors.yellow,
